@@ -26,6 +26,8 @@ with open("01_input") as file:
 #total: 6min 45
 
 
+
+
 """golfed"""
 with open("01_input") as file:
     input = [int(line) for line in file]
