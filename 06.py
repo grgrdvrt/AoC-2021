@@ -20,3 +20,14 @@ with open("06_input") as file:
 
 # part1: 14min 25s
 # total: 14min 55s
+
+
+
+#golfed:
+with open("06_input") as file:
+    input = [int(v) for v in file.read().strip().split(",")]
+    c = [input.count(i) for i in range(9)]
+    for i in range(256):
+        c = c[1:]+[c[0]]
+        c[6]+=c[8]
+    print(sum(c))
