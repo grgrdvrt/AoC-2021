@@ -1,5 +1,3 @@
-import re
-
 with open("06_input") as file:
     input = [int(v) for v in file.read().strip().split(",")]
     c = {key:input.count(key) for key in set(input)}
