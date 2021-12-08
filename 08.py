@@ -56,3 +56,38 @@ print(total)
 
 #part1: 7min53
 #total: 34min 32
+
+
+
+
+"""golfed"""
+
+def processLine(line):
+    parts = line.strip().split("|")
+    return [[set(w) for w in p.strip().split(" ")] for p in parts]
+
+input = [processLine(line) for line in open("08_input").readlines()]
+
+#part 1
+print(sum(sum([len(x) in [2, 4, 3, 7] for x in line[1]]) for line in input))
+
+# part 2
+total = 0
+for line in input:
+    w = {length:[w for w in line[0] if len(w) == length] for length in set([len(w) for w in line[0]])}
+
+    n = [0]*10
+    n[1], n[4], n[7], n[8] = [w[l][0] for l in [2, 4, 3, 7]]
+
+    for x in w[5]:
+        if n[1] <= x: n[3] = x
+        if (n[4] - n[1]) <= x: n[5] = x
+        if (n[4] | x) == n[8]: n[2] = x
+
+    for x in w[6]:
+        if not(n[1] <= x): n[6] = x
+        if(n[4] <= x): n[9] = x
+    n[0] = [x for x in w[6] if not(x in [n[6], n[9]])][0]
+
+    total += int("".join([str(n.index(v)) for v in line[1]]))
+print(total)
