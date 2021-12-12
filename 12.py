@@ -1,102 +1,59 @@
-
 input = open("12_input").read()
 
-_input = """
-start-A
-start-b
-A-c
-A-b
-b-d
-A-end
-b-end
+connections = {}
+for l in input.strip().split("\n"):
+    pair = l.split("-")
+    connections.setdefault(pair[0], [])
+    connections[pair[0]].append(pair[1])
 
-"""
-
-values = [v.split("-") for v in input.strip().split("\n")]
-
-majs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    connections.setdefault(pair[1], [])
+    connections[pair[1]].append(pair[0])
 
 
-nodeNames = set([v[0] for v in values] + [v[1] for v in values])
-graph = {}
-for name in nodeNames:
-    graph[name] = {
-        "name":name,
-        "neighbours":{},
-        "isBig":name[0] in majs
-    }
-
-for l in values:
-    graph[l[0]]["neighbours"][l[1]] = graph[l[1]]
-    graph[l[1]]["neighbours"][l[0]] = graph[l[0]]
+#part1
 closedPaths = set()
-stack = [[graph["start"]]]
+stack = [["start"]]
 while stack:
-    # print("_____________")
-    # for p in stack:
-    #     print([n["name"] for n in p])
     path = stack[0]
     nextStack = stack[1:]
-    for node in path[-1]["neighbours"].values():
+    for node in connections[path[-1]]:
         newPath = [n for n in path]
-        if node["isBig"] or not(node in path):
+        if node[0].isupper() or not(node in path):
             newPath += [node]
-            if node["name"] == "end":
-                closedPaths.add(tuple([n["name"] for n in newPath]))
+            if node == "end":
+                closedPaths.add(tuple(newPath))
             else:
                 nextStack.append(newPath)
     stack = nextStack
-print("done")
-# for l in closedPaths:
-#     print(l)
 print(len(closedPaths))
 
 
 
 
-
-
-
-graph = {}
-for name in nodeNames:
-    graph[name] = {
-        "name":name,
-        "neighbours":{},
-        "isBig":name[0] in majs
-    }
-from collections import Counter
+#part2
 def hasDouble(path):
-    return max(Counter([name for name in path if not(name[0] in majs)]).values()) >= 2
+    return max([path.count(v) for v in set(path) if not(v[0].isupper())]) >= 2
 
-for l in values:
-    graph[l[0]]["neighbours"][l[1]] = graph[l[1]]
-    graph[l[1]]["neighbours"][l[0]] = graph[l[0]]
 closedPaths = set()
 stack = [["start"]]
 
 while stack:
-    # print("_____________", [p for p in closedPaths if len(p) > 20])
-    # for p in stack:
-    #     print([n["name"] for n in p])
     path = stack[0]
     nextStack = stack[1:]
-    for node in graph[path[-1]]["neighbours"].values():
-        if node["name"] == "start":continue
+    for node in connections[path[-1]]:
+        if node == "start":continue
         newPath = [n for n in path]
         if(
-                node["isBig"]
-                or not(node["name"] in path)
+                node[0].isupper()
+                or not(node in path)
                 or not(hasDouble(path))
         ):
-            newPath += [node["name"]]
-            if node["name"] == "end":
+            newPath += [node]
+            if node == "end":
                 closedPaths.add(tuple(newPath))
             else:
                 nextStack.append(newPath)
     stack = nextStack
-print("done")
-# for l in closedPaths:
-#     print(l)
 print(len(closedPaths))
 
 
