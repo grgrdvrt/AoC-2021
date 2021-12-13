@@ -14,8 +14,7 @@ for l in input.strip().split("\n"):
 closedPaths = set()
 stack = [["start"]]
 while stack:
-    path = stack[0]
-    nextStack = stack[1:]
+    path, nextStack = stack[-1], stack[:-1]
     for node in connections[path[-1]]:
         newPath = [n for n in path]
         if node[0].isupper() or not(node in path):
